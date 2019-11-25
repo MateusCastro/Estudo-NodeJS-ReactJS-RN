@@ -154,7 +154,7 @@ Call Stack - Uma pilha de eventos (função que foi disparada pelo código) e o
 Node processa atravez de um loop eterno vendo se tem alguma função que foi disparada
 pela aplicação.
 
-[imagem]
+![Event Loop Node.js](https://github.com/MateusCastro/Rocketseat-Bootcamp-GoStack/blob/master/markdowns/images/event-loop-node.jpg)
 
 Falamos muito que o Node é sigle-thread, que seria o Event Loop. Quando chega uma
 requisição, a mesma chama um evento (o Node é baseado em evento) que vai para a fila
