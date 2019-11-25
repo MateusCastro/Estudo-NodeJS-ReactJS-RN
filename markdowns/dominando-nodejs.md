@@ -15,8 +15,8 @@ que utiliza a linguagem JavaScript
 ### Características
 
 - [Google v8](#o-google-v8)
-- [Single-thread](#o-node.js-é-single-thread)
-- [Non-blocking I/O](#Non-blocking-I/O)
+- [Single-thread](#o-nodejs-é-single-thread)
+- [Non-blocking I/O](#non-blocking-io)
 - [Arquitetura Event-loop](#arquitetura-event-loop)
 
 #### O Google V8
