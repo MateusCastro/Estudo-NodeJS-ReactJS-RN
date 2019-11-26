@@ -187,4 +187,146 @@ Referência e para mais informações sobre Event Loop:
 
 ### Express
 
-O framework ultilizado pelo curso é o Express, que é um framework Node que pode ser comparado com o Laravel para PHP, ele cria abstrações de rotas, middlewares e muitas outras funções para facilitar a criação tanto de API's quanto SPA's.
+O micro framework ultilizado pelo curso é o Express, que é um framework Node que pode ser comparado com o Laravel para PHP, ele cria abstrações de rotas, middlewares e muitas outras funções para facilitar a criação tanto de API's quanto SPA's.
+
+#### Instalação
+
+Para instalar o express bastar usar o comando:
+
+```
+yarn add express
+```
+
+#### Primeiros passos
+
+Comece importando o express.
+
+```
+const express = require('express');
+```
+
+Para instanciar o express:
+
+```
+const server = express();
+```
+
+E finalmente, para rodar o node, configure uma porta
+
+```
+server.listen(3000);
+```
+
+#### Configuração de rotas
+
+Uma rota consiste em um método HTTP, um caminho (uma string ou uma expressão regular), middlewares e uma função callback (que será chamada quando o evento ocorrer).
+
+Veja o exemplo:
+
+```
+chamarExpress.verboHTTP(rota(string), middlewares, funçãoASerExecutada)
+```
+
+Rota: é uma string que representa o caminho da url.
+
+funçãoASerExecutada: Toda função a ser executada quando a rota for chamada recebe dois parâmetros: o primeiro é todos os dados vindo da requisição (geralmente chamado de rec) e o segundo terá todas as informações necesssárias para retornar uma resposta para o cliente (geralmente chamado de res)
+
+Middleware: Funções de Middleware são funções que tem acesso ao objeto de solicitação (req), o objeto de resposta (res), e a próxima função de middleware no ciclo solicitação-resposta do aplicativo. A próxima função middleware é comumente denotada por uma variável chamada next.
+
+Fonte e para mais informações sobre Middleware: [Usando middlewares do Express - Express.js](https://expressjs.com/pt-br/guide/using-middleware.html)
+
+Código exemplo configurando o Express, criando rotas e utilizando middlewares:
+
+```
+// Importando Express
+const express = require('express');
+
+// Instanciando express
+const server = express();
+
+// variável que representa todos os projetos
+const projects = [];
+// variável que guarda a quantidade de requisições
+let count = 0
+
+// Middleware que regista a quantidade de requisições
+function qtdRequest(req, res, next) {
+  count++
+  console.log(`Total de requisições: ${count}`)
+  return next()
+}
+
+// Função que usará o Middleware
+server.use(qtdRequest)
+
+// Middleware que checa se o projeto existe
+function checkUserExists(req, res, next) {
+  const { id } = req.params;
+  const index = projects.findIndex(item => item.id == id);
+
+  if (index === -1) {
+    return res.status(400).json({ error: "Project does not exists" });
+  }
+
+  return next();
+}
+
+// Retorna os projetos
+server.get('/projects', (req, res) => {
+  return res.json(projects);
+})
+
+// Retorna um projeto específico e utiliza o middleware checkUserExists
+server.get('/projects/:id', checkUserExists, (req, res) => {
+  const { id } = req.params;
+  const project = projects.filter(item => item.id == id);
+  return res.json(project[0]);
+})
+
+// Adiciona um novo projeto
+server.post('/projects', (req, res) => {
+  const { id, title } = req.body;
+  const project = { id, title, tasks: [] };
+
+  projects.push(project);
+  return res.json(projects);
+})
+
+// Edita um projeto e utiliza o middleware checkUserExists
+server.put('/projects/:id', checkUserExists, (req, res) => {
+  const { id } = req.params;
+  const { title } = req.body;
+
+  const index = projects.findIndex(item => item.id == id);
+
+  projects[index].title = title;
+  return res.json(projects)
+})
+
+// Exclui um projeto e utiliza o middleware checkUserExists
+server.delete('/projects/:id', checkUserExists, (req, res) => {
+  const { id } = req.params;
+  const index = projects.findIndex(item => item.id == id);
+
+  projects.splice(index, 1);
+  return res.send()
+})
+
+// Adiciona uma tarefa a um projeto e utiliza o middleware checkUserExists
+server.post('/projects/:id/tasks', checkUserExists, (req, res) => {
+  const { id } = req.params;
+  const { title } = req.body;
+
+  const index = projects.findIndex(item => item.id == id);
+
+  projects[index].tasks.push(title);
+
+  return res.json(projects);
+
+})
+
+// Inicia o Express na porta 3030
+server.listen(3030)
+```
+
+Confira o código acima no github clicando [aqui](https://github.com/MateusCastro/bootcamp-gostack-desafio-01)
