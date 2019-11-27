@@ -276,13 +276,6 @@ server.get('/projects', (req, res) => {
   return res.json(projects);
 })
 
-// Retorna um projeto específico e utiliza o middleware checkUserExists
-server.get('/projects/:id', checkUserExists, (req, res) => {
-  const { id } = req.params;
-  const project = projects.filter(item => item.id == id);
-  return res.json(project[0]);
-})
-
 // Adiciona um novo projeto
 server.post('/projects', (req, res) => {
   const { id, title } = req.body;
@@ -292,41 +285,8 @@ server.post('/projects', (req, res) => {
   return res.json(projects);
 })
 
-// Edita um projeto e utiliza o middleware checkUserExists
-server.put('/projects/:id', checkUserExists, (req, res) => {
-  const { id } = req.params;
-  const { title } = req.body;
-
-  const index = projects.findIndex(item => item.id == id);
-
-  projects[index].title = title;
-  return res.json(projects)
-})
-
-// Exclui um projeto e utiliza o middleware checkUserExists
-server.delete('/projects/:id', checkUserExists, (req, res) => {
-  const { id } = req.params;
-  const index = projects.findIndex(item => item.id == id);
-
-  projects.splice(index, 1);
-  return res.send()
-})
-
-// Adiciona uma tarefa a um projeto e utiliza o middleware checkUserExists
-server.post('/projects/:id/tasks', checkUserExists, (req, res) => {
-  const { id } = req.params;
-  const { title } = req.body;
-
-  const index = projects.findIndex(item => item.id == id);
-
-  projects[index].tasks.push(title);
-
-  return res.json(projects);
-
-})
-
 // Inicia o Express na porta 3030
 server.listen(3030)
 ```
 
-Confira o código acima no github clicando [aqui](https://github.com/MateusCastro/bootcamp-gostack-desafio-01)
+Confira o código completo no github clicando [aqui](https://github.com/MateusCastro/bootcamp-gostack-desafio-01)
